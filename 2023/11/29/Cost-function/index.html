@@ -20,19 +20,22 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="Good luck!">
-<meta property="og:type" content="website">
-<meta property="og:title" content="分类">
-<meta property="og:url" content="http://example.com/categories/index.html">
+  <meta name="description" content="代价函数假定假设函数为：$h_\theta(x) &#x3D; \theta_0+\theta_1x$ 那么当我们在选择不同的$\theta_0$和$\theta_1$的时候，此函数的图像会有所变化。此时，如果我们用该函数拟合一组数据：  为了找到最优解，如果我们通过平方误差代价函数来找最优解，并假定函数为：$h_\theta(x) &#x3D; \theta_1x$，则平方误差代价函数就是： $">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cost function">
+<meta property="og:url" content="http://example.com/2023/11/29/Cost-function/index.html">
 <meta property="og:site_name" content="xzyj55&#39;Blog">
-<meta property="og:description" content="Good luck!">
+<meta property="og:description" content="代价函数假定假设函数为：$h_\theta(x) &#x3D; \theta_0+\theta_1x$ 那么当我们在选择不同的$\theta_0$和$\theta_1$的时候，此函数的图像会有所变化。此时，如果我们用该函数拟合一组数据：  为了找到最优解，如果我们通过平方误差代价函数来找最优解，并假定函数为：$h_\theta(x) &#x3D; \theta_1x$，则平方误差代价函数就是： $">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-07-06T07:18:59.000Z">
-<meta property="article:modified_time" content="2023-07-06T08:21:10.000Z">
+<meta property="og:image" content="http://example.com/2023/11/29/Cost-function/20161019204101430">
+<meta property="og:image" content="http://example.com/2023/11/29/Cost-function/20161019205324983">
+<meta property="article:published_time" content="2023-11-29T07:51:05.000Z">
+<meta property="article:modified_time" content="2023-11-29T08:38:19.971Z">
 <meta property="article:author" content="xzyj55">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2023/11/29/Cost-function/20161019204101430">
 
-<link rel="canonical" href="http://example.com/categories/">
+<link rel="canonical" href="http://example.com/2023/11/29/Cost-function/">
 
 
 <script id="page-configurations">
@@ -40,13 +43,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>分类 | xzyj55'Blog
-</title>
+  <title>Cost function | xzyj55'Blog</title>
   
 
 
@@ -148,51 +150,99 @@
       <div class="main-inner">
         <div class="content-wrap">
           
-  
-  
 
-          <div class="content page posts-expand">
+          <div class="content post posts-expand">
             
 
     
-    
-    
-    <div class="post-block" lang="zh-CN">
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/11/29/Cost-function/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/R-C.jpg">
+      <meta itemprop="name" content="xzyj55">
+      <meta itemprop="description" content="Good luck!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xzyj55'Blog">
+    </span>
       <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Cost function
+        </h1>
 
-<h1 class="post-title" itemprop="name headline">分类
-</h1>
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
 
-<div class="post-meta">
+              <time title="创建时间：2023-11-29 15:51:05 / 修改时间：16:38:19" itemprop="dateCreated datePublished" datetime="2023-11-29T15:51:05+08:00">2023-11-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/compressed-sensing/" itemprop="url" rel="index"><span itemprop="name">compressed-sensing</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="代价函数"><a href="#代价函数" class="headerlink" title="代价函数"></a>代价函数</h1><p>假定假设函数为：$h_\theta(x) &#x3D; \theta_0+\theta_1x$</p>
+<p>那么当我们在选择不同的$\theta_0$和$\theta_1$的时候，此函数的图像会有所变化。此时，如果我们用该函数拟合一组数据：</p>
+<p><img src="/2023/11/29/Cost-function/20161019204101430"></p>
+<p>为了找到最优解，如果我们通过平方误差代价函数来找最优解，并假定函数为：$h_\theta(x) &#x3D; \theta_1x$，则平方误差代价函数就是：</p>
+<p>$$J(\theta_0,\theta_1) &#x3D; \frac{1}{2m}\sum^m_{i&#x3D;1}(h_\theta(x^{(i)}-y^{(i)})^2$$</p>
+<p>上式可以理解为：</p>
+<p><img src="/2023/11/29/Cost-function/20161019205324983"></p>
+<p>即为假设函数在每一点的值与实际值的差的平方和的均值，如果这个值越小就说明拟合的越好，那么可以对该代价函数求导来谋求极值。那么可以把代价函数理解为：利用实际与预测值的差来求最佳拟合的函数。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/11/27/class_object/" rel="prev" title="类与对象">
+      <i class="fa fa-chevron-left"></i> 类与对象
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/11/30/Solve-process/" rel="next" title="compressed sensing Solve process">
+      compressed sensing Solve process <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
   
 
-</div>
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
-          <div class="category-all-page">
-            <div class="category-all-title">
-              目前共计 3 个分类
-            </div>
-            <div class="category-all">
-              <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Digital-image-processing-Matlab/">Digital image processing--Matlab</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/compressed-sensing/">compressed-sensing</a><span class="category-list-count">2</span></li></ul>
-            </div>
-          </div>
-        
-      </div>
-      
-      
-      
-    </div>
-    
-
-    
-    
-    
 
 
           </div>
@@ -243,6 +293,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%A3%E4%BB%B7%E5%87%BD%E6%95%B0"><span class="nav-number">1.</span> <span class="nav-text">代价函数</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

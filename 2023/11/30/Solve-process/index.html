@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="压缩感知基础设z为N维列向量，h为z在不同域上的表示，即可以通过一个$N\times N$的变换基$\phi$来使$z&#x3D;\phi h$，则对于观测向量y（y是一个M维的列向量，其中M&lt;N），假定z通过变换$\psi$使得$y&#x3D;\psi z$，那么此时y可以表示为$y&#x3D;\psi\phi h$，令$\psi\phi&#x3D;A$则有$y&#x3D;Ah$，这样就把">
+<meta property="og:type" content="article">
+<meta property="og:title" content="compressed sensing Solve process">
+<meta property="og:url" content="http://example.com/2023/11/30/Solve-process/index.html">
+<meta property="og:site_name" content="xzyj55&#39;Blog">
+<meta property="og:description" content="压缩感知基础设z为N维列向量，h为z在不同域上的表示，即可以通过一个$N\times N$的变换基$\phi$来使$z&#x3D;\phi h$，则对于观测向量y（y是一个M维的列向量，其中M&lt;N），假定z通过变换$\psi$使得$y&#x3D;\psi z$，那么此时y可以表示为$y&#x3D;\psi\phi h$，令$\psi\phi&#x3D;A$则有$y&#x3D;Ah$，这样就把">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2023/11/30/Solve-process/image-20231130142545793.png">
+<meta property="og:image" content="http://example.com/2023/11/30/Solve-process/image-20231130143631841.png">
+<meta property="og:image" content="http://example.com/2023/11/30/Solve-process/image-20231130150040795.png">
+<meta property="og:image" content="http://example.com/2023/11/30/Solve-process/image-20231130150712699.png">
+<meta property="og:image" content="http://example.com/2023/11/30/Solve-process/image-20231130150830973.png">
+<meta property="og:image" content="http://example.com/2023/11/30/Solve-process/image-20231130151024673.png">
+<meta property="og:image" content="http://example.com/2023/11/30/Solve-process/image-20231130151049895.png">
+<meta property="og:image" content="http://example.com/2023/11/30/Solve-process/image-20231130151150841.png">
+<meta property="og:image" content="http://example.com/2023/11/30/Solve-process/image-20231130151224994.png">
+<meta property="og:image" content="http://example.com/2023/11/30/Solve-process/image-20231130151500970.png">
+<meta property="og:image" content="http://example.com/2023/11/30/Solve-process/image-20231130165413159.png">
+<meta property="article:published_time" content="2023-11-30T05:48:01.000Z">
+<meta property="article:modified_time" content="2023-11-30T08:55:05.435Z">
+<meta property="article:author" content="xzyj55">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2023/11/30/Solve-process/image-20231130142545793.png">
+
+<link rel="canonical" href="http://example.com/2023/11/30/Solve-process/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>compressed sensing Solve process | xzyj55'Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">xzyj55'Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/11/30/Solve-process/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/R-C.jpg">
+      <meta itemprop="name" content="xzyj55">
+      <meta itemprop="description" content="Good luck!">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xzyj55'Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          compressed sensing Solve process
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-11-30 13:48:01 / 修改时间：16:55:05" itemprop="dateCreated datePublished" datetime="2023-11-30T13:48:01+08:00">2023-11-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/compressed-sensing/" itemprop="url" rel="index"><span itemprop="name">compressed-sensing</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="压缩感知基础"><a href="#压缩感知基础" class="headerlink" title="压缩感知基础"></a>压缩感知基础</h1><p>设z为N维列向量，h为z在不同域上的表示，即可以通过一个$N\times N$的变换基$\phi$来使$z&#x3D;\phi h$，则对于观测向量y（y是一个M维的列向量，其中M&lt;N），假定z通过变换$\psi$使得$y&#x3D;\psi z$，那么此时y可以表示为$y&#x3D;\psi\phi h$，令$\psi\phi&#x3D;A$则有$y&#x3D;Ah$，这样就把原本不稀疏的z与y的关系式，变成y与一个稀疏矩阵h的式子了。</p>
+<h2 id="满足条件"><a href="#满足条件" class="headerlink" title="满足条件"></a>满足条件</h2><ol>
+<li>稀疏性先验条件：信号在某个变换域绝大多数元素为零。</li>
+<li>有限等距（Restricted lsometry Property,RIP）。</li>
+</ol>
+<h3 id="RIP"><a href="#RIP" class="headerlink" title="RIP"></a>RIP</h3><p>为了准确重建信号，感知矩阵A必须满足有限等距性质：对于任意具有稀疏度K的信号z(K就是z中非零元素个数)，感知矩阵A满足：</p>
+<p><img src="/2023/11/30/Solve-process/image-20231130142545793.png"></p>
+<p>其中$\delta_K\in(0,1)$为K阶等距约束常数。如果A满足一定阶数和常数的RIP，则L0范数和L1范数的最优解将完全一致。RIP的本质是<strong>感知矩阵A中所有的列子集都正交</strong>。</p>
+<p>尽管一些矩阵被证明符合 RIP，但是实际中无法检测大多数矩阵的 RIP，所以在实际中一般应用互相关系数来评估测量矩阵的重构性能。感知矩阵 A的互相关系数为：</p>
+<p><img src="/2023/11/30/Solve-process/image-20231130143631841.png"></p>
+<p>其中，$\rho_i$表示A的第i列，分子表示内积，可以看到这个式子与求相关系数很相似，由于原本是想要A的列向量正交，所谓正交就是让其互不相关，那么求互相关系数也显得很合理了。为能够精确重构信号，对信号的稀疏度K与互相关系数$\chi$满足：</p>
+<p>$$K&lt;\frac{1}{2}(\frac{1}{\chi}+1), 信号不包含噪声$$</p>
+<p>$$K&lt;\frac{1}{4}(\frac{1}{\chi}+1), 信号包含噪声$$</p>
+<h2 id="具体实现重构"><a href="#具体实现重构" class="headerlink" title="具体实现重构"></a>具体实现重构</h2><h3 id="凸松弛类方法"><a href="#凸松弛类方法" class="headerlink" title="凸松弛类方法"></a>凸松弛类方法</h3><p>主要有基追踪（BP）、抗噪基追踪（BPDN）、最小角度回归（LARS）等。</p>
+<p>下面以BPDN松弛后的优化问题来看具体重构过程。</p>
+<p>BPDN优化公式将零范数最小化问题松弛为二范数的平方的二分之一加上一范数的正则化的最小问题：</p>
+<p><img src="/2023/11/30/Solve-process/image-20231130150040795.png"></p>
+<p>其中后面一项为正则项。下面看求解过程：</p>
+<p>首先将x定义为两个非负变量u和v的差，其中$\tau$为正则化系数：</p>
+<p><img src="/2023/11/30/Solve-process/image-20231130150712699.png"></p>
+<p><img src="/2023/11/30/Solve-process/image-20231130150830973.png"></p>
+<p>由于$y^T[A,-A]z$是一个数，则：</p>
+<p><img src="/2023/11/30/Solve-process/image-20231130151024673.png"></p>
+<p>综上有：</p>
+<p><img src="/2023/11/30/Solve-process/image-20231130151049895.png"></p>
+<p>定义$I^T_n&#x3D;(1,1,…,1)^T$，元素个数为n，则</p>
+<p><img src="/2023/11/30/Solve-process/image-20231130151150841.png"></p>
+<p>从而原式子可以变为:</p>
+<p><img src="/2023/11/30/Solve-process/image-20231130151224994.png"></p>
+<p>其中$c&#x3D;\tau I_{2n}+(-b,b)^T$, 因为$y^Ty$为一个常数，不影响最优化极值点位置，上式可以写为二次规划形式：</p>
+<p><img src="/2023/11/30/Solve-process/image-20231130151500970.png"></p>
+<p>利用凸优化理论中的二次规划方法来求出最优化解$z_0$后，根据x与z的关系求出x即可。</p>
+<p>具体代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">function [x] = BPDN(y,tao,A)</span><br><span class="line">if size(y,1)&lt;size(y,2)</span><br><span class="line">    y = y&#x27;;</span><br><span class="line">end</span><br><span class="line">n = size(A,2);</span><br><span class="line">b = A&#x27;*y;</span><br><span class="line">c = tao*ones(2*n,1)+[-b;b];</span><br><span class="line">B = [A&#x27;*A,-A&#x27;*A;-A&#x27;*A,A&#x27;*A];</span><br><span class="line">lb = zeros(2*n,1);</span><br><span class="line">z0 = quadprog(B,c,[],[],[],[],lb);</span><br><span class="line">x = z0(1:n)-z0(n+1:2*n);</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">demo:</span><br><span class="line">x = [zeros(1,100),10,zeros(1,50),5,zeros(1,100),8,zeros(1,100)]&#x27;;</span><br><span class="line">A = randi([1,10],50,size(x,1));</span><br><span class="line">noise = [zeros(1,29),40,zeros(1,9),20,zeros(1,10)]&#x27;;</span><br><span class="line">y = A*x+noise;</span><br><span class="line">x1 = BPDN(y,0.4,A);</span><br><span class="line">subplot(2,2,1);</span><br><span class="line">plot(x);</span><br><span class="line">title(&#x27;x&#x27;);</span><br><span class="line">subplot(2,2,2);</span><br><span class="line">plot(x1);</span><br><span class="line">title(&#x27;x1&#x27;);</span><br><span class="line">subplot(2,2,3);</span><br><span class="line">plot(y);</span><br><span class="line">subplot(2,2,4);</span><br><span class="line">plot(A);</span><br></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<p><img src="/2023/11/30/Solve-process/image-20231130165413159.png"></p>
+<p>具体还是需要想清楚为什么能滤除脉冲噪声。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/11/29/Cost-function/" rel="prev" title="Cost function">
+      <i class="fa fa-chevron-left"></i> Cost function
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8E%8B%E7%BC%A9%E6%84%9F%E7%9F%A5%E5%9F%BA%E7%A1%80"><span class="nav-number">1.</span> <span class="nav-text">压缩感知基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BB%A1%E8%B6%B3%E6%9D%A1%E4%BB%B6"><span class="nav-number">1.1.</span> <span class="nav-text">满足条件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RIP"><span class="nav-number">1.1.1.</span> <span class="nav-text">RIP</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E5%AE%9E%E7%8E%B0%E9%87%8D%E6%9E%84"><span class="nav-number">1.2.</span> <span class="nav-text">具体实现重构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%B8%E6%9D%BE%E5%BC%9B%E7%B1%BB%E6%96%B9%E6%B3%95"><span class="nav-number">1.2.1.</span> <span class="nav-text">凸松弛类方法</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="xzyj55"
+      src="/images/R-C.jpg">
+  <p class="site-author-name" itemprop="name">xzyj55</p>
+  <div class="site-description" itemprop="description">Good luck!</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xzyj55</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
