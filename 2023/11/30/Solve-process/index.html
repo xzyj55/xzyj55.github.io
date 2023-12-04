@@ -38,8 +38,9 @@
 <meta property="og:image" content="http://example.com/2023/11/30/Solve-process/image-20231130151224994.png">
 <meta property="og:image" content="http://example.com/2023/11/30/Solve-process/image-20231130151500970.png">
 <meta property="og:image" content="http://example.com/2023/11/30/Solve-process/image-20231130165413159.png">
+<meta property="og:image" content="http://example.com/2023/11/30/Solve-process/image-20231201142523379.png">
 <meta property="article:published_time" content="2023-11-30T05:48:01.000Z">
-<meta property="article:modified_time" content="2023-12-01T06:19:21.651Z">
+<meta property="article:modified_time" content="2023-12-04T11:27:47.416Z">
 <meta property="article:author" content="xzyj55">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/2023/11/30/Solve-process/image-20231130142545793.png">
@@ -197,7 +198,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-12-01 14:19:21" itemprop="dateModified" datetime="2023-12-01T14:19:21+08:00">2023-12-01</time>
+                <time title="修改时间：2023-12-04 19:27:47" itemprop="dateModified" datetime="2023-12-04T19:27:47+08:00">2023-12-04</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -230,7 +231,7 @@
 <p>其中$\delta_K\in(0,1)$为K阶等距约束常数。如果A满足一定阶数和常数的RIP，则L0范数和L1范数的最优解将完全一致。RIP的本质是<strong>感知矩阵A中所有的列子集都正交</strong>。</p>
 <p>尽管一些矩阵被证明符合 RIP，但是实际中无法检测大多数矩阵的 RIP，所以在实际中一般应用互相关系数来评估测量矩阵的重构性能。感知矩阵 A的互相关系数为：</p>
 <p><img src="/2023/11/30/Solve-process/image-20231130143631841.png" alt></p>
-<p>其中，$\rho_i$表示A的第i列，分子表示内积，可以看到这个式子与求相关系数很相似，由于原本是想要A的列向量正交，所谓正交就是让其互不相关，那么求互相关系数也显得很合理了。为能够精确重构信号，对信号的稀疏度K与互相关系数$\chi$满足：</p>
+<p>其中，$\rho_i$表示A的第i列，分子表示内积，可以看到这个式子与求相关系数很相似，由于原本是想要A的列向量正交，所谓正交就是让其互不相关，那么求互相关系数也显得很合理了,<strong>实际上，求感知矩阵不相关就是在求RIP条件</strong>。为能够精确重构信号，对信号的稀疏度K与互相关系数$\chi$满足：</p>
 <script type="math/tex; mode=display">K<\frac{1}{2}(\frac{1}{\chi}+1), 信号不包含噪声</script><script type="math/tex; mode=display">K<\frac{1}{4}(\frac{1}{\chi}+1), 信号包含噪声</script><h2 id="具体实现重构"><a href="#具体实现重构" class="headerlink" title="具体实现重构"></a>具体实现重构</h2><h3 id="凸松弛类方法"><a href="#凸松弛类方法" class="headerlink" title="凸松弛类方法"></a>凸松弛类方法</h3><p>主要有基追踪（BP）、抗噪基追踪（BPDN）、最小角度回归（LARS）等。</p>
 <p>下面以BPDN松弛后的优化问题来看具体重构过程。</p>
 <p>BPDN优化公式将零范数最小化问题松弛为二范数的平方的二分之一加上一范数的正则化的最小问题：</p>
@@ -255,7 +256,8 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">demo:</span><br><span class="line">x = [zeros(1,100),10,zeros(1,50),5,zeros(1,100),8,zeros(1,100)]&#x27;;</span><br><span class="line">A = randi([1,10],50,size(x,1));</span><br><span class="line">noise = [zeros(1,29),40,zeros(1,9),20,zeros(1,10)]&#x27;;</span><br><span class="line">y = A*x+noise;</span><br><span class="line">x1 = BPDN(y,0.4,A);</span><br><span class="line">subplot(2,2,1);</span><br><span class="line">plot(x);</span><br><span class="line">title(&#x27;x&#x27;);</span><br><span class="line">subplot(2,2,2);</span><br><span class="line">plot(x1);</span><br><span class="line">title(&#x27;x1&#x27;);</span><br><span class="line">subplot(2,2,3);</span><br><span class="line">plot(y);</span><br><span class="line">subplot(2,2,4);</span><br><span class="line">plot(A);</span><br></pre></td></tr></table></figure>
 <p>结果：</p>
 <p><img src="/2023/11/30/Solve-process/image-20231130165413159.png" alt></p>
-<p>具体还是需要想清楚为什么能滤除脉冲噪声。</p>
+<p>具体还是需要想清楚为什么能滤除脉冲噪声：由于压缩感知在重构信号的时候，求的是具有最简单结构的x，即既要x更好的满足约束条件，又要其结构最简单（零元素越多越好）。</p>
+<p><img src="/2023/11/30/Solve-process/image-20231201142523379.png" alt></p>
 
     </div>
 
@@ -274,7 +276,10 @@
     <a href="/2023/11/29/Cost-function/" rel="prev" title="Cost function">
       <i class="fa fa-chevron-left"></i> Cost function
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2023/12/01/AMP/" rel="next" title="AMP">
+      AMP <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -349,7 +354,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
